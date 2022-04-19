@@ -15,6 +15,7 @@ This is a React / Firebase project from [Brad Traversy](https://github.com/bradt
 * OAuth
 
 ## Updates & Improvements
+* Refactored navbar active link function to return the highlight color
 
 # Installation & Usage
 

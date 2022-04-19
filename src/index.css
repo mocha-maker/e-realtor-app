@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@200;300;400;500;600;700;800;900&display=swap');
 :root {
   --main-font-family: Raleway, sans-serif;
-  --primary-color: #ffcc55;
+  --primary-color: #ff55b2;
 }
 
 * {
@@ -223,11 +223,15 @@ button {
   text-align: right;
 }
 
+a:hover {
+  filter: brightness(90%);
+}
+
 .signInBar,
 .signUpBar {
   margin-top: 3rem;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   position: inherit;
 }
@@ -241,7 +245,7 @@ button {
 @media (min-width: 1024px) {
   .signInBar,
   .signUpBar {
-    justify-content: start;
+    justify-content: flex-end;
   }
 }
 
@@ -260,12 +264,13 @@ button {
   height: 3rem;
   background-color: var(--primary-color);
   border-radius: 50%;
+  margin-left: 2rem;
+  transition: all 0.5 ease;
 }
-@media (min-width: 1024px) {
-  .signInButton,
-  .signUpButton {
-    margin-left: 3rem;
-  }
+
+.signInButton:hover,
+.signUpButton:hover {
+  filter: brightness(110%);
 }
 
 .socialLogin {

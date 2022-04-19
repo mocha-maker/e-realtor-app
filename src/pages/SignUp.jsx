@@ -1,5 +1,11 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+
+// Database
+import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
+import { setDoc, doc, serverTimestamp } from 'firebase/firestore'
+import { db } from '../firebase.config'
+
 import { ReactComponent as ArrowRightIcon } from '../assets/svg/keyboardArrowRightIcon.svg'
 import visibilityIcon from '../assets/svg/visibilityIcon.svg'
 
@@ -27,16 +33,44 @@ function SignUp() {
 
   }
 
+  // On sign-up form submit - create a user
+  const onSubmit = async (e) => {
+    e.preventDefault()
 
+    try {
+      // Create a new user with entered details
+      const auth = getAuth()
+      const userCredentials = await createUserWithEmailAndPassword(auth, email, password)
+      const user = userCredentials.user
 
+      updateProfile(auth.currentUser, {
+        displayName: name,
+      })
+
+      // Create a copy to remove password details from local store before saving to db - users collection
+      const formDataCopy = {...formData}
+      delete formDataCopy.password
+      formDataCopy.timestamp = serverTimestamp()
+
+      await setDoc(doc(db, 'users', user.uid), formDataCopy)
+
+      // Go to home page
+      navigate('/')
+      
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // Main HTML Rendering
   return (
     <>
       <div className="pageContainer">
         <header>
-          <p className="pageHeader">Welcome Back!</p>
+          <p className="pageHeader">Welcome!</p>
         </header>
         <main>
-          <form>
+          <form onSubmit={onSubmit}>
           <input 
             type="text" 
             className="nameInput" 

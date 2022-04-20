@@ -22,37 +22,42 @@ function ListingItem({ listing, id, onDelete }) {
   return (
     <li className="categoryListing">
       <Link to={`/category/${type}/${id}`} className='categoryListingLink'>
-        <img 
-          className='categoryListingImg'
-          src={imageUrls[0]} alt={name} />
-          <div className="categoryListingDetails">
-            <p className="categoryListingLocation">{location}</p>
-            <p className="categoryListingName">{name}</p>
-            
-            <p className="categoryListingPrice">
-              ${(offer ? discountedPrice : regularPrice)
-                  .toString().replace(/\B(?=(\d{3})+(?!\d))/g,',')} 
-                {type === 'rent' && ' / Month' }
+        <div className='imageContainer'>
+          <img 
+            className='categoryListingImg'
+            src={imageUrls[0]} alt={name} />
+          <p className='discountTag'>
+              {(offer && Math.round((1 - (discountedPrice / regularPrice)) * 100) + "% OFF")}
+          </p>
+        </div>
+        <div className="categoryListingDetails">
+          <p className="categoryListingLocation">{location}</p>
+          <p className="categoryListingName">{name}</p>
+          
+          <p className="categoryListingPrice">
+            ${(offer ? discountedPrice : regularPrice)
+                .toString().replace(/\B(?=(\d{3})+(?!\d))/g,',')} 
+              {type === 'rent' && ' / Month' }
+          </p>
+          <div className="categoryListingInfoDiv">
+            <img src={bedIcon} alt='bed'/>
+            <p className='categoryListingInfoText'>
+            {bedrooms} {bedrooms > 1 ? 'Bedrooms' : 'Bedroom'}
             </p>
-            <div className="categoryListingInfoDiv">
-              <img src={bedIcon} alt='bed'/>
-              <p className='categoryListingInfoText'>
-              {bedrooms} {bedrooms > 1 ? 'Bedrooms' : 'Bedroom'}
-              </p>
-              <img src={bathtubIcon} alt='bathtub'/>
-              <p className='categoryListingInfoText'>
-              {bathrooms} {bathrooms > 1 ? 'Bathrooms' : 'Bathroom'}
-              </p>
-            </div>
+            <img src={bathtubIcon} alt='bathtub'/>
+            <p className='categoryListingInfoText'>
+            {bathrooms} {bathrooms > 1 ? 'Bathrooms' : 'Bathroom'}
+            </p>
+          </div>
           </div>
       </Link>
+
 
       {
         // If owned, allow delete
         onDelete && (
         <DeleteIcon 
           className='removeIcon'
-          fill='red'
           onClick={() => onDelete(id, name)}
         />
         )

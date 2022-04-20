@@ -59,7 +59,7 @@ function SignIn() {
         <header>
           <p className="pageHeader">Welcome Back!</p>
         </header>
-        <main>
+        <main className='pageContainer'>
           <form onSubmit={onSubmit}>
           <input 
             type="email" 

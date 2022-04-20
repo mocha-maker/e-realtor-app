@@ -4,6 +4,7 @@
   --primary-color: #0075c4;
   --background-color: whitesmoke;
   --alert-color: rgb(197, 59, 59);
+  --box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 * {
@@ -295,7 +296,7 @@ a:hover {
   height: 3rem;
   background-color: #ffffff;
   border-radius: 50%;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: var(--box-shadow);
 }
 
 .socialIconImg {
@@ -399,7 +400,7 @@ a:hover {
   border-radius: 1.5rem;
   object-fit: cover;
   margin: 0 auto;
-  box-shadow: 1px 1px 5px rgb(0 0 0 / 50%);
+  box-shadow: var(--box-shadow);
 }
 
 .exploreCategoryName {
@@ -439,7 +440,7 @@ a:hover {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  box-shadow: 1px 1px 5px rgb(0 0 0 / 50%);
+  box-shadow: var(--box-shadow);
 }
 
 
@@ -450,7 +451,7 @@ a:hover {
 
 .categoryListingLocation {
   font-weight: 600;
-  font-size: 0.7rem;
+  font-size: 1rem;
   opacity: 0.8;
   margin-bottom: 0;
 }
@@ -637,10 +638,6 @@ a:hover {
   margin-bottom: 0.5rem;
 }
 
-.profile {
-  margin-bottom: 10rem;
-}
-
 .profileHeader {
   display: flex;
   justify-content: space-between;
@@ -678,8 +675,8 @@ a:hover {
   background-color: #ffffff;
   border-radius: 1rem;
   padding: 1rem;
-  box-shadow: rgba(0, 0, 0, 0.2);
-  max-width: 500px;
+  box-shadow: var(--box-shadow);
+  width: 500px;
 }
 
 .profileDetails {
@@ -723,7 +720,7 @@ a:hover {
   background-color: #ffffff;
   border-radius: 1rem;
   padding: 0.25rem 1rem;
-  box-shadow: rgba(0, 0, 0, 0.2);
+  box-shadow: var(--box-shadow);
   margin-top: 2rem;
   font-weight: 600;
   max-width: 500px;
@@ -737,7 +734,7 @@ a:hover {
   font-weight: 600;
 }
 
-.lisitingsList {
+.listingsList {
   padding: 0;
 }
 
@@ -849,4 +846,11 @@ a:hover {
   margin-left: 1rem;
   font-size: 0.8rem;
   opacity: 0.75;
+}
+
+@media screen and (max-width: 786px) {
+  .createListing,
+  .profileCard {
+    width: 95vw;
+  }  
 }

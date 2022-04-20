@@ -76,7 +76,7 @@ function SignUp() {
         <header>
           <p className="pageHeader">Welcome!</p>
         </header>
-        <main>
+        <main className='pageContainer'>
           <form onSubmit={onSubmit}>
           <input 
             type="text" 

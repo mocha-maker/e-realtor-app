@@ -5,11 +5,11 @@ import sellCategoryImage from '../assets/jpg/sellCategoryImage.jpg'
 function Explore() {
   return (
     <div className='explore'>
-      <header>
+      <header className='pageContainer'>
         <p className="pageHeader">Explore</p>
       </header>
 
-      <main>
+      <main className='pageContainer'>
         {/* Slider */}
 
         <p className="exploreCategoryHeading">Categories</p>

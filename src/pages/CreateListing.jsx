@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import Spinner from "../components/Spinner"
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 function CreateListing() {
   // States
@@ -22,7 +23,9 @@ function CreateListing() {
   })
   
   // Manually set geolocation if you have the API for it
-  const [geolocationEnabled, setGeoocationEnabled] = useState(true)
+  const [geolocationEnabled, setGeolocationEnabled] = useState(true)
+  const geocodeURL = process.env.REACT_APP_GEOAPIFY_GEOCODE_URL
+  const geocodeAPI = process.env.REACT_APP_GEOAPIFY_KEY
 
   // Destructure formData
   const {
@@ -59,8 +62,51 @@ function CreateListing() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
-  const onSubmit = (e) => { 
+  const onSubmit = async (e) => { 
     e.preventDefault()
+    setLoading(true)
+
+    // Error if discount is more than regular
+    if (discountedPrice >= regularPrice) {
+      toast.error('Discounted price must be less than the regular price')
+    }
+
+    // Error if more than 6 images
+    if (images.length > 6) {
+      toast.error('You can only upload up to 6 images')
+    }
+
+    let geolocation = {}
+    let location
+
+    if (geolocationEnabled) {
+      const query = `${geocodeURL}/search?text=${address}&format=json&apiKey=${geocodeAPI}`
+
+      const response = await fetch(query)
+      const data = await response.json()
+
+      console.log(data);
+
+      // On successful retrieval
+      if (data.results.length > 0) {
+        console.log("Reading Data")
+        const found = data.results[0]
+
+        // Set geocoded data to formData
+        geolocation.lat = found.lat ?? 0
+        geolocation.lng = found.lon ?? 0
+        location = found.formatted ?? undefined
+      } else {
+        toast.error('Please enter a valid address')
+      }
+
+    } else {
+      geolocation.lat = latitude
+      geolocation.lng = longitude
+      location = address
+    }
+
+    setLoading(false)
   }
 
   const onMutate = (e) => { 

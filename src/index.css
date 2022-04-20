@@ -852,6 +852,6 @@ a:hover {
 @media screen and (max-width: 786px) {
   .createListing,
   .profileCard {
-    width: 95vw;
+    width: 90vw !important;
   }  
 }

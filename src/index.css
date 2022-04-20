@@ -1,6 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@200;300;400;500;600;700;800;900&display=swap');
 :root {
-  --main-font-family: Raleway, sans-serif;
+  --main-font-family: Roboto, sans-serif;
   --primary-color: #ff55b2;
 }
 
@@ -677,8 +677,10 @@ a:hover {
 .profileNameActive {
   all: unset;
   margin: 0.3rem 0;
+  padding: 0.3rem 0.6rem;
   font-weight: 600;
-  width: 100%;
+  width: 80%;
+  border-radius: 10px;
 }
 .profileNameActive {
   background-color: rgba(44, 44, 44, 0.1);

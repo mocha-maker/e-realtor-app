@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { getAuth, updateProfile } from 'firebase/auth'
+import { getAuth, updateProfile, updateEmail, signInWithEmailAndPassword } from 'firebase/auth'
 import { useNavigate } from 'react-router-dom'
 import { updateDoc, doc } from 'firebase/firestore'
 import { db } from '../firebase.config'
@@ -18,10 +18,11 @@ function Profile() {
   const [formData, setFormData] = useState({
     name: auth.currentUser.displayName,
     email: auth.currentUser.email,
+    password: auth.currentUser.password
   })
 
   // destructure form data
-  const {name, email} = formData
+  const {name, email, password} = formData
 
   // Log out on click
   const onLogout = (e) => {
@@ -36,7 +37,8 @@ function Profile() {
       // Check if form is different from existing data
       if(auth.currentUser.displayName !== name) {
         // Update details in the database
-        await updateProfile(auth.currentUser, {
+        await updateProfile(
+          auth.currentUser, {
           displayName: name
         })
 
@@ -45,11 +47,49 @@ function Profile() {
         await updateDoc(userRef, {
           name,
         })
+
+        auth.currentUser.displayName === name && toast.success('Name updated')
+
       }
-      toast.success('Profile details updated')
+
+      if(auth.currentUser.email !== email) {
+
+        try {
+          // Reauthorize with password
+          const credential = await signInWithEmailAndPassword(auth, auth.currentUser.email, password)
+          console.log(credential.user)
+
+          // If successful credential authorization
+          if (credential.user) {
+            // Update details in the database
+            await updateEmail(
+              auth.currentUser,
+              email
+            )    
+
+            // Update in firestore
+            const userRef = doc(db, 'users', auth.currentUser.uid)
+            await updateDoc(userRef, {
+              email,
+            })
+              
+            auth.currentUser.email === email && toast.success('Email updated')
+          }
+        } catch (error) {
+          toast.error('Bad credentials')
+        }
+      } 
+
     } catch (error) {
       toast.error('Could not update profile details')
+    
     }
+
+    // Clear password from state and form
+    setFormData((prevState) => ({
+      ...prevState,
+      password: '',
+    }))
 
   }
   
@@ -101,6 +141,16 @@ function Profile() {
             type="text" id="email" 
             value={email}
             className={!updateDetails ? 'profileEmail' : 'profileEmailActive'}
+            disabled={!updateDetails}
+            onChange={onChange}
+          />
+          <label htmlFor='password' className='formLabel'>
+            Password:
+          </label>
+          <input 
+            type="password" id="password" 
+            value={password}
+            className={!updateDetails ? 'profileName' : 'profileNameActive'}
             disabled={!updateDetails}
             onChange={onChange}
           />

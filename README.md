@@ -9,7 +9,7 @@ This is a React / Firebase project from [Brad Traversy](https://github.com/bradt
 * [Create-React-App](https://create-react-app.dev/)
 * [Firebase](https://firebase.google.com/)
 * [Toastify](https://www.npmjs.com/package/react-toastify)
-* [Geocoding API](https://developers.google.com/maps/documentation/geocoding/overview)
+* [Geoapify API](https://www.geoapify.com/)
 ## Skills demonstrated
 * 3rd Party API
 * HTTPS Requests
@@ -23,7 +23,7 @@ This is a React / Firebase project from [Brad Traversy](https://github.com/bradt
 
 If you want to autfill geolocation:
 1. Rename .env.example to .env
-2. Get an API key for Geocoding API [here](https://developers.google.com/maps/documentation/geocoding/get-api-key)
+2. Get an API key for Geocoding API [here](https://myprojects.geoapify.com/)
 
 ELSE in the CreateListing.jsx file you can set geolocationEnabled to "false" and it will add a lat/lng field to the form
 ## Install Dependencies

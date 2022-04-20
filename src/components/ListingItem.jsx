@@ -26,9 +26,10 @@ function ListingItem({ listing, id, onDelete }) {
           <img 
             className='categoryListingImg'
             src={imageUrls[0]} alt={name} />
-          <p className='discountTag'>
-              {(offer && Math.round((1 - (discountedPrice / regularPrice)) * 100) + "% OFF")}
-          </p>
+          {offer && (
+            <p className='discountTag'>
+              {Math.round((1 - (discountedPrice / regularPrice)) * 100) + "% OFF"}
+          </p>)}
         </div>
         <div className="categoryListingDetails">
           <p className="categoryListingLocation">{location}</p>

@@ -1,8 +1,21 @@
+// Utilities
 import { useEffect, useState } from 'react'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
-import Spinner from "../components/Spinner"
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from 'firebase/storage'
+import { addDoc, serverTimestamp, collection } from 'firebase/firestore'
+import { db } from '../firebase.config'
+import { v4 as uuidv4 } from 'uuid'
+
+// Components
+import Spinner from '../components/Spinner'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
+
 
 function CreateListing() {
   // States
@@ -21,9 +34,10 @@ function CreateListing() {
     latitude: 0,
     longitude: 0,
   })
-  
-  // Manually set geolocation if you have the API for it
+
+  // TODO: Manually set geolocation toggle depending on if you have the API
   const [geolocationEnabled, setGeolocationEnabled] = useState(true)
+
   const geocodeURL = process.env.REACT_APP_GEOAPIFY_GEOCODE_URL
   const geocodeAPI = process.env.REACT_APP_GEOAPIFY_KEY
 
@@ -52,17 +66,17 @@ function CreateListing() {
       if (user) {
         setFormData({
           ...formData,
-          userRef: user.uid
+          userRef: user.uid,
         })
-       } else {
-          navigate('/sign-in')
+      } else {
+        navigate('/sign-in')
       }
-      })
+    })
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
-  const onSubmit = async (e) => { 
+  const onSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
 
@@ -80,38 +94,118 @@ function CreateListing() {
     let location
 
     if (geolocationEnabled) {
+      // If enabled Start Geocoding
       const query = `${geocodeURL}/search?text=${address}&format=json&apiKey=${geocodeAPI}`
 
       const response = await fetch(query)
       const data = await response.json()
 
-      console.log(data);
+      console.log(data)
 
       // On successful retrieval
       if (data.results.length > 0) {
-        console.log("Reading Data")
+        console.log('Reading Data')
         const found = data.results[0]
 
         // Set geocoded data to formData
         geolocation.lat = found.lat ?? 0
         geolocation.lng = found.lon ?? 0
-        location = found.formatted ?? undefined
+        //location = found.formatted ?? null
       } else {
         toast.error('Please enter a valid address')
       }
-
     } else {
+      // Record lat and long manually as entered in form
       geolocation.lat = latitude
       geolocation.lng = longitude
-      location = address
     }
 
+    // Store an image in firebase
+    const storeImage = async (image) => {
+      return new Promise((resolve, reject) => {
+        const storage = getStorage()
+        // Generate a unique filename using user id, the image upload name, and a unique key from uuidv4
+        const fileName = `${auth.currentUser.uid}-${image.name}-${uuidv4()}`
+        // Create storageRef
+        const storageRef = ref(storage, 'images/' + fileName)
+        // Create Upload Task (destination, object)
+        const uploadTask = uploadBytesResumable(storageRef, image)
+
+        // From https://firebase.google.com/docs/storage/web/upload-files
+        // Register three observers:
+        // 1. 'state_changed' observer, called any time the state changes
+        // 2. Error observer, called on failure
+        // 3. Completion observer, called on successful completion
+        uploadTask.on(
+          'state_changed',
+          (snapshot) => {
+            const progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+            console.log('Upload is ' + progress + '% done')
+            switch (snapshot.state) {
+              case 'paused':
+                console.log('Upload is paused')
+                break
+              case 'running':
+                console.log('Upload is running')
+                break
+            }
+          },
+          (error) => {
+            console.log(error)
+            reject(error)
+          },
+          () => {
+            // Handle successful uploads on complete
+            // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+              resolve(downloadURL)
+            })
+          }
+        )
+      })
+    }
+
+    // Resolve all selected images
+    const imageUrls = await Promise.all(
+      [...images].map((image) => storeImage(image))
+    ).catch(() => {
+      // if returns an error
+      setLoading(false)
+      toast.error('Images not uploaded')
+      return
+    })
+
+    // Prepare formData copy
+
+    const formDataCopy = {
+      ...formData,
+      imageUrls,
+      geolocation,
+      timestamp: serverTimestamp(),
+    }
+
+    formDataCopy.location = address
+
+    // Remove unneeded fields
+    delete formDataCopy.images
+    delete formDataCopy.address
+    !formDataCopy.offer && delete formData.discountedPrice
+
+    console.log(formDataCopy)
+
+    // Save to the database
+    const docRef = await addDoc(collection(db, 'listings'), formDataCopy)
+    
     setLoading(false)
+    
+    toast.success('Listing added')
+    navigate(`/category/${formDataCopy.type}/${docRef.id}`)
   }
 
-  const onMutate = (e) => { 
+  const onMutate = (e) => {
     let bool = null
-    
+
     // for bools
     e.target.value === 'true' && (bool = true)
     e.target.value === 'false' && (bool = false)
@@ -129,16 +223,15 @@ function CreateListing() {
         [e.target.id]: bool ?? e.target.value,
       }))
     }
-    
   }
-  
+
   return (
     <div className='profile'>
       <header className='pageContainer'>
         <p className='pageHeader'>Create a Listing</p>
       </header>
       <main className='pageContainer'>
-      <form onSubmit={onSubmit}>
+        <form onSubmit={onSubmit}>
           <label className='formLabel'>Sell / Rent</label>
           <div className='formButtons'>
             <button
@@ -331,18 +424,18 @@ function CreateListing() {
           {offer && (
             <>
               <label className='formLabel'>Discounted Price</label>
-                <div className='formPriceDiv'>
-                  <input
-                    className='formInputSmall'
-                    type='number'
-                    id='discountedPrice'
-                    value={discountedPrice}
-                    onChange={onMutate}
-                    min='50'
-                    max='750000000'
-                    required={offer}
-                  />
-                </div>
+              <div className='formPriceDiv'>
+                <input
+                  className='formInputSmall'
+                  type='number'
+                  id='discountedPrice'
+                  value={discountedPrice}
+                  onChange={onMutate}
+                  min='50'
+                  max='750000000'
+                  required={offer}
+                />
+              </div>
             </>
           )}
 
@@ -365,7 +458,7 @@ function CreateListing() {
           </button>
         </form>
       </main>
-      {loading && <Spinner/>}
+      {loading && <Spinner />}
     </div>
   )
 }

@@ -80,8 +80,8 @@ button {
 .removeIcon {
   cursor: pointer;
   position: absolute;
-  top: -3%;
-  right: -2%;
+  top: 0;
+  right: 0;
 }
 .editIcon {
   cursor: pointer;
@@ -140,6 +140,7 @@ button {
 }
 
 .pageHeader {
+  text-transform: capitalize;
   font-size: 2rem;
   font-weight: 800;
 }

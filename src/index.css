@@ -681,6 +681,7 @@ a:hover {
   font-weight: 600;
   width: 80%;
   border-radius: 10px;
+  transition: all 0.3s ease;
 }
 .profileNameActive {
   background-color: rgba(44, 44, 44, 0.1);

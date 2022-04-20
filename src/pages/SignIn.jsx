@@ -3,8 +3,6 @@ import { Link, useNavigate } from 'react-router-dom'
 
 // Database
 import { getAuth, signInWithEmailAndPassword, signInWithEmailLink } from 'firebase/auth'
-import { setDoc, doc, serverTimestamp } from 'firebase/firestore'
-import { db } from '../firebase.config'
 
 // Components
 import { ReactComponent as ArrowRightIcon } from '../assets/svg/keyboardArrowRightIcon.svg'
@@ -45,6 +43,7 @@ function SignIn() {
   
       if(userCredentials.user) {
         navigate('/')  
+        toast.success('Login successful')
       } 
     } catch (error) {
       toast.error('Bad User Credentials')
@@ -63,6 +62,7 @@ function SignIn() {
           <form onSubmit={onSubmit}>
           <input 
             type="email" 
+            autocomplete="on"
             className="emailInput" 
             placeholder="Email"
             id='email'
@@ -70,7 +70,8 @@ function SignIn() {
             onChange={onChange}/>
             <div className="passwordInputDiv">
               <input 
-                type={showPassword ? 'text' : 'password'} 
+                type={showPassword ? 'text' : 'password'}
+                autocomplete="off" 
                 className="passwordInput" 
                 placeholder="Password"
                 id='password'

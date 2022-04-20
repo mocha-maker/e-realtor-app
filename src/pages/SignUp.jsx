@@ -79,6 +79,7 @@ function SignUp() {
           <form onSubmit={onSubmit}>
           <input 
             type="text" 
+            autocomplete="on"
             className="nameInput" 
             placeholder="Name"
             id='name'
@@ -86,6 +87,7 @@ function SignUp() {
             onChange={onChange}/>
           <input 
             type="email" 
+            autocomplete="off"
             className="emailInput" 
             placeholder="Email"
             id='email'

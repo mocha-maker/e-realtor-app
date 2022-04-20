@@ -6,8 +6,10 @@ import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'firebase
 import { setDoc, doc, serverTimestamp } from 'firebase/firestore'
 import { db } from '../firebase.config'
 
+// Components
 import { ReactComponent as ArrowRightIcon } from '../assets/svg/keyboardArrowRightIcon.svg'
 import visibilityIcon from '../assets/svg/visibilityIcon.svg'
+import { toast } from 'react-toastify'
 
 function SignUp() {
 
@@ -58,7 +60,11 @@ function SignUp() {
       navigate('/')
       
     } catch (error) {
-      console.log(error);
+      console.log(error.code);
+      if (error.code === "auth/weak-password") {
+        return toast.warning('Password should be at least 6 characters long.')
+      }
+      toast.error('Unable to register.')
     }
   }
 

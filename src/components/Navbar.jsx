@@ -32,8 +32,8 @@ function Navbar() {
             <p>Offer</p>
           </li>
           <li className="navbarListItem"
-            onClick={() => navigate('sign-in')}>
-            <ProfileIcon fill={pathMatchRoute('/sign-in')} width='36px' height='36px'/>
+            onClick={() => navigate('profile')}>
+            <ProfileIcon fill={pathMatchRoute('/profile')} width='36px' height='36px'/>
             <p>Profile</p>
           </li>
         </ul>

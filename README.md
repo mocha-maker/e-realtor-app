@@ -8,6 +8,7 @@ This is a React / Firebase project from [Brad Traversy](https://github.com/bradt
 ## This project used the following tools & frameworks:
 * [Create-React-App](https://create-react-app.dev/)
 * [Firebase](https://firebase.google.com/)
+* [Toastify](https://www.npmjs.com/package/react-toastify)
 * [Geocoding API](https://developers.google.com/maps/documentation/geocoding/overview)
 ## Skills demonstrated
 * 3rd Party API
@@ -16,6 +17,7 @@ This is a React / Firebase project from [Brad Traversy](https://github.com/bradt
 
 ## Updates & Improvements
 * Refactored navbar active link function to return the highlight color
+* UI updates for sign-up and sign-in pages
 
 # Installation & Usage
 

@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // Components
 import Navbar from './components/Navbar'
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 // Pages
 import Explore from './pages/Explore'
@@ -27,6 +29,10 @@ function App() {
       </Routes>
       <Navbar/>
     </Router>
+    <ToastContainer 
+      position="bottom-center"
+      pauseOnHover={false}
+      newestOnTop={false}/>
     </>
   );
 }

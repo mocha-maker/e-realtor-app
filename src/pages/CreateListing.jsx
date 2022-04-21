@@ -92,7 +92,6 @@ function CreateListing() {
     }
 
     let geolocation = {}
-    let location
 
     if (geolocationEnabled) {
       // If enabled Start Geocoding
@@ -149,6 +148,8 @@ function CreateListing() {
                 break
               case 'running':
                 console.log('Upload is running')
+                break
+              default:
                 break
             }
           },

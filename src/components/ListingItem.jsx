@@ -2,10 +2,12 @@
 
 import { Link } from 'react-router-dom'
 import { ReactComponent as DeleteIcon } from '../assets/svg/deleteIcon.svg'
+import { ReactComponent as EditIcon } from '../assets/svg/editIcon.svg'
 import bedIcon from '../assets/svg/bedIcon.svg'
 import bathtubIcon from '../assets/svg/bathtubIcon.svg'
+import sofaIcon from '../assets/png/sofaIcon.png'
 
-function ListingItem({ listing, id, onDelete }) {
+function ListingItem({ listing, id, onDelete, onEdit }) {
 
   // deconstruct listing
   const {
@@ -51,13 +53,24 @@ function ListingItem({ listing, id, onDelete }) {
             <p className='categoryListingInfoText'>
             {bathrooms} {bathrooms > 1 ? 'Bathrooms' : 'Bathroom'}
             </p>
+            { furnished && <><img src={sofaIcon} alt='Furnished' width={30} height={30}/>
+            <p className='categoryListingInfoText'>Furnished</p>
+            </>
+            }
           </div>
           </div>
       </Link>
 
 
-      {
-        // If owned, allow delete
+      {// If owned, allow edit
+        onEdit && (
+        <EditIcon 
+          className='editIcon'
+          onClick={() => onEdit(id)}
+        />
+        )
+      }
+      {// If owned, allow delete
         onDelete && (
         <DeleteIcon 
           className='removeIcon'

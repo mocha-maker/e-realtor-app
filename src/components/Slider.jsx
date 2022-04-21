@@ -49,6 +49,10 @@ function Slider() {
     return <Spinner/>
   }
 
+  if (listings.length <= 0) {
+    return <></>
+  }
+
   return !loading && (
     <>
       <p className='exploreHeading'>Recommended</p>
@@ -60,7 +64,7 @@ function Slider() {
             style={{background: `url(${data.imageUrls[0]}) center no-repeat`}}>
               <div className="swiperSlideText">{data.name}</div>
               <div className="swiperSlidePrice">
-                ${(data.discountedPrice ?? data.regularPrice)
+                ${(data.offer ? data.discountedPrice : data.regularPrice)
                 .toString().replace(/\B(?=(\d{3})+(?!\d))/g,',')}
               {data.type === 'rent' && ' / Month' }</div>
             </div>

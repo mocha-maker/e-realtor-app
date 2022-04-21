@@ -14,10 +14,11 @@ import { toast } from 'react-toastify'
 import Spinner from '../components/Spinner'
 import ListingItem from '../components/ListingItem'
 
-function Offers() {
+function Category() {
   // States
   const [listings, setListings] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [lastFetchedListing, setLastFetchedListing] = useState(null)
 
   // Fetching toast to prevent duplicates
   const notify = () => {
@@ -46,8 +47,11 @@ function Offers() {
         // Execute query
         const querySnap = await getDocs(q)
 
-        // Iterate through snapshot
+        // Record the last listing retrieved
+        const lastVisible = querySnap.docs[querySnap.docs.length-1]
+        setLastFetchedListing(lastVisible)
 
+        // Iterate through snapshot
         const results = []
 
         querySnap.forEach((doc) => {
@@ -71,6 +75,50 @@ function Offers() {
     fetchListings()
   }, [params.categoryName])
 
+  // Load more listings // pagination
+  const onFetchMoreListings = async () => {
+    try {
+      notify()
+      
+      // Get collection reference
+      const listingsRef = collection(db, 'listings')
+
+      // Create a query (collection field, query type, query)
+      const q = query(
+        listingsRef,
+        where('offer', '==', true),
+        orderBy('timestamp', 'desc'),
+        startAfter(lastFetchedListing),
+        limit(10)
+      )
+
+      // Execute query
+      const querySnap = await getDocs(q)
+
+      // Record the last listing retrieved
+      const lastVisible = querySnap.docs[querySnap.docs.length-1]
+      setLastFetchedListing(lastVisible)
+
+      // Iterate through snapshot
+      const results = []
+
+      querySnap.forEach((doc) => {
+        return results.push({
+          id: doc.id,
+          data: doc.data(),
+        })
+      })
+      setListings((prevState) => [...prevState, ...results])
+      setLoading(false)
+      toast.dismiss()
+
+    } catch (error) {
+      console.log(error);
+      toast.dismiss()
+      toast.error("Could not fetch listings")
+    }
+  }
+
   return (
     <div className='category'>
       <header className='pageContainer'>
@@ -87,15 +135,21 @@ function Offers() {
                 <ListingItem 
                   listing={listing.data} 
                   id={listing.id}
-                  onDelete={true}/>              
+                  onDelete={false}/>              
               ))}
             </ul>
+            <br/>
+          <br/>
+          { lastFetchedListing && (
+            <p className="loadMore" onClick={onFetchMoreListings}>Find More</p>
+          )}
           </main>
+
         </>
       ) : (
-        <p>No current offers.</p>
+        <p>No listings available.</p>
       )}
     </div>
   )
 }
-export default Offers
+export default Category

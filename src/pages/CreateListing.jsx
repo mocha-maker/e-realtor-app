@@ -19,7 +19,7 @@ import { toast } from 'react-toastify'
 
 function CreateListing() {
   // States
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [formData, setFormData] = useState({
     type: '',
     name: '',
@@ -67,12 +67,13 @@ function CreateListing() {
         setFormData({
           ...formData,
           userRef: user.uid,
+          type: 'sale',
         })
       } else {
         navigate('/sign-in')
       }
     })
-
+    setLoading(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -225,7 +226,7 @@ function CreateListing() {
     }
   }
 
-  return (
+  return !loading && (
     <div className='profile'>
       <header className='pageContainer'>
         <p className='pageHeader'>Create a Listing</p>

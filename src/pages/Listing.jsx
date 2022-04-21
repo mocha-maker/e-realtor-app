@@ -4,10 +4,21 @@ import { Link, useNavigate, useParams } from "react-router-dom"
 import { getDoc, doc } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
 import { db } from '../firebase.config'
+import { MapContainer, Marker, Popup, TileLayer  } from 'react-leaflet'
+import { Icon } from 'leaflet'
+import 'leaflet/dist/leaflet.css'
+
+import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from 'swiper'
+import 'swiper/css'
+import 'swiper/css/navigation'
+import 'swiper/css/pagination'
 
 // Components
 import Spinner from '../components/Spinner'
 import shareIcon from '../assets/svg/shareIcon.svg'
+import MapMarkerIcon from '../assets/png/map-marker-icon.png'
+import { Swiper, SwiperSlide } from 'swiper/react'
+SwiperCore.use([Navigation, Pagination, Scrollbar, A11y])
 
 function Listing() {
   // States
@@ -29,28 +40,12 @@ function Listing() {
         console.log(docSnap.data())
         setListing(docSnap.data())
         setLoading(false)
+
+        console.log();
       }
     }
     fetchListing()
   }, [navigate, params.listingId])
-
-  // //deconstruct listing
-  // const {
-  //   bathroom,
-  //   bedrooms,
-  //   discountedPrice,
-  //   furnished,
-  //   geolocation,
-  //   imageUrls,
-  //   location,
-  //   name,
-  //   offer,
-  //   parking,
-  //   regularPrice,
-  //   timestamp,
-  //   type,
-  //   userRef,
-  // } = listing
 
 
   if (loading) {
@@ -62,7 +57,23 @@ function Listing() {
   return (
     <main className='pageContainer'>
 
-      {/* Image SLIDER */}
+      <Swiper
+        slidesPerView={1}
+        pagination={{clickable: true}}
+        className='swiper-container'>
+          {listing.imageUrls.map((url,index) => {
+            <SwiperSlide key={index}>
+              <div className='swiperSlideDiv'
+                style={{
+                background: `url(${listing.imageUrls[index]}) center no-repeat`,
+                backgroundSize: 'cover'}} 
+                >
+
+              </div>
+            </SwiperSlide>
+          })}
+
+      </Swiper>
       
 
       <div className="shareIconDiv" onClick={() => {
@@ -110,6 +121,20 @@ function Listing() {
         <p className="listingLocationTitle">Location</p>
 
         {/* MAP */}
+        <div className="leafletContainer">
+          <MapContainer style={{height: '100%', width: '100%'}} center={[listing.geolocation.lat, listing.geolocation.lng]} zoom={13} scrollWheelZoom={false}>
+            <TileLayer
+              attribution='&copy; <a href="https://www.osm.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <Marker position={[listing.geolocation.lat, listing.geolocation.lng]} 
+              icon={new Icon({iconUrl: MapMarkerIcon, iconSize: [40,40]})}>
+              <Popup>
+                <p>{listing.location}</p>
+              </Popup>
+            </Marker>
+          </MapContainer>
+        </div>
 
         {/* Contact if listing is not the current user */
           auth.currentUser?.uid !== listing.userRef && (

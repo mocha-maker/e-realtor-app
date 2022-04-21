@@ -15,6 +15,10 @@ html::-webkit-scrollbar {
   display: none;
 }
 
+main {
+  padding-bottom: 6rem;
+}
+
 body {
   font-family: var(--main-font-family);
   background-color: #f2f4f8;
@@ -833,7 +837,6 @@ a:hover {
 
 .createListingButton {
   margin-top: 2rem;
-  margin-bottom: 7rem;
 }
 
 .offers {

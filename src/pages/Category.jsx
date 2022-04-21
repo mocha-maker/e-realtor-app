@@ -87,7 +87,7 @@ function Category() {
                 <ListingItem 
                   listing={listing.data} 
                   id={listing.id}
-                  onDelete={true}/>              
+                  onDelete={false}/>              
               ))}
             </ul>
           </main>

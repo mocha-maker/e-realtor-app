@@ -1,6 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@200;300;400;500;600;700;800;900&display=swap');
+
 :root {
-  --main-font-family: Roboto, sans-serif;
+  --main-font-family: Raleway, sans-serif;
+  --alt-font-family: Raleway, serif;
   --primary-color: #0075c4;
   --background-color: whitesmoke;
   --alert-color: rgb(197, 59, 59);
@@ -349,7 +352,7 @@ a:hover {
   position: relative;
   width: 100%;
   height: 100%;
-  background-size: cover;
+  background-size: cover !important;
 }
 
 .swiperSlideImg {
@@ -411,7 +414,7 @@ a:hover {
 
 .exploreCategoryName {
   font-weight: 500;
-  text-align: left;
+  text-align: center;
 }
 
 .category {

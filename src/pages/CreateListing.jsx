@@ -36,6 +36,7 @@ function CreateListing() {
   })
 
   // TODO: Manually set geolocation toggle depending on if you have the API
+  // eslint-disable-next-line no-unused-vars
   const [geolocationEnabled, setGeolocationEnabled] = useState(true)
 
   const geocodeURL = process.env.REACT_APP_GEOAPIFY_GEOCODE_URL

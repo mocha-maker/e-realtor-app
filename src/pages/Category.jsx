@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import {
   collection,
@@ -133,6 +133,7 @@ function Category() {
             <ul className="categoryListings">
               {listings.map((listing) => (
                 <ListingItem 
+                  key={listing.id}
                   listing={listing.data} 
                   id={listing.id}
                   onDelete={false}/>              

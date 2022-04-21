@@ -223,6 +223,7 @@ function Profile() {
           <ul className="categoryListings">
               {userListings.map((listing) => (
                 <ListingItem 
+                  key={listing.id}
                   listing={listing.data} 
                   id={listing.id}
                   onDelete={onDelete}
